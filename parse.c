@@ -1,11 +1,6 @@
 /*
 ** Abstract Syntax Tree generator.
 ** Parses the tokens into a syntax tree, and detects a lot of syntax issues.
-
-
-
-TODO ISSUES:
-    - FunctionDefStatement isn't freed properly.
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,6 +59,14 @@ static void set_node_parent(Node* parent, Node* child) {
     parent->next.siz++;
 
     child->prev = parent;
+}
+
+/*
+** Manually set a nodes value (strdup's <val> too).
+*/
+static void set_node_value(Node* nd, char* val) {
+    free(nd->value);
+    nd->value = strdup(val);
 }
 
 /* combines put_node_into_ps and set_node_parent */
@@ -181,7 +184,7 @@ static void erase_tmp_state(ParseState* ps) {
 
 static void ArgumentListExpression(ParseState* ps) {
     Node* child = create_node(ND_ArgumentListExpression, ps->current_token);
-    child->value = "";
+    set_node_value(child, "");
     autoset_node_parent(child);
     ps->current_node = child;
 
@@ -268,7 +271,7 @@ static void FunctionDefStatement(ParseState* ps) {
 
     // build node
     Node* child = create_node(ND_FunctionDefStatement, ps->current_token);
-    child->value = ps->current_token->next->value;
+    set_node_value(child, ps->current_token->next->value);
     autoset_node_parent(child);
     ps->current_node = child;
 
@@ -664,8 +667,8 @@ AbstractSyntaxTree* parse_generate(LexOut* lo) {
     return ast;
 } // ! fix func def not freeing
 void parse_free(AbstractSyntaxTree *ast) {
-    printf("FREE DEBUG:\n");
-    _print_node(ast->nodes[0], 0);
+    //printf("FREE DEBUG:\n");
+    //_print_node(ast->nodes[0], 0);
     for (int i = 0; i < ast->siz; i++) {
         Node* nd = ast->nodes[i];
         //puts("A");
