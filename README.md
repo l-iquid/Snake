@@ -4,4 +4,5 @@ TODO
 Compiled, fixes common Python issues.
 
 # REQUIREMENTS
-Binutils, GCC, Make, Linux/Windows (as of now).
+Binutils, GCC, Make.
+Windows, Linux, MacOS compatible.
