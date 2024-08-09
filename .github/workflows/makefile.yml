@@ -17,7 +17,7 @@ on:
 jobs:
   build:
 
-    runs-on: ["${{ inputs.chosen-os }}"]
+    runs-on: [self-hosted, "${{ inputs.chosen-os }}"]
 
     steps:
     - uses: actions/checkout@v4
